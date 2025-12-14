@@ -847,6 +847,16 @@ app.post('/api/admin/login', (req, res) => {
     envPassHash: envPassHash.slice(0, 8)
   });
 
+  // Additional debug to detect trailing/leading whitespace issues
+  console.log('Admin login hash compare', {
+    inputHash8: inputPassHash.slice(0, 8),
+    envHash8: envPassHash.slice(0, 8),
+    inputLen: inputPass.length,
+    envLen: ADMIN_PASSWORD.length,
+    userMatch,
+    passMatch
+  });
+
   if (userMatch && passMatch) {
     const token = jwt.sign({ username: inputUser }, JWT_SECRET, { expiresIn: '2h' });
     return res.json({ token });
