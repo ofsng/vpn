@@ -43,6 +43,14 @@ app.use(express.static('public'));
 // Admin credentials
 const ADMIN_USERNAME = (process.env.ADMIN_USERNAME || 'admin').trim();
 const ADMIN_PASSWORD = (process.env.ADMIN_PASSWORD || 'admin123').trim();
+
+// Debug env (no secrets)
+console.log('Admin env loaded', {
+  userSet: !!process.env.ADMIN_USERNAME,
+  userLen: ADMIN_USERNAME.length,
+  passSet: !!process.env.ADMIN_PASSWORD,
+  passLen: ADMIN_PASSWORD.length
+});
 const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key-change-in-production';
 
 // Simple admin auth middleware
@@ -823,8 +831,11 @@ app.post('/api/admin/login', (req, res) => {
   // Safe debug log (password not logged)
   console.log('Admin login attempt', {
     envUser: ADMIN_USERNAME ? 'set' : 'missing',
+    envUserLen: ADMIN_USERNAME.length,
     inputUser,
     userMatch,
+    passSet: !!process.env.ADMIN_PASSWORD,
+    passLen: ADMIN_PASSWORD.length,
     passMatch
   });
 
