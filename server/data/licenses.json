@@ -1,0 +1,25 @@
+{
+  "licenses": [
+    {
+      "id": "ba90198a-2199-4fcc-948a-e3d2d3f50b63",
+      "key": "0YB7-LTJB-C43X-C98S",
+      "email": "omerfaruksng@gmail.com",
+      "createdAt": "2025-07-15T13:45:19.735Z",
+      "expiryDate": "2030-12-30",
+      "status": "active",
+      "name": "",
+      "country": "",
+      "city": "",
+      "ip": "",
+      "port": ""
+    },
+    {
+      "id": "c9334506-2390-4262-800a-38cf894fec8b",
+      "key": "6K9V-DROX-4ASZ-JA5R",
+      "email": "iseewprkwpb@gmail.com",
+      "createdAt": "2025-07-15T18:20:37.448Z",
+      "expiryDate": "2025-08-15",
+      "status": "active"
+    }
+  ]
+}
