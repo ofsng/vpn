@@ -43,7 +43,9 @@ app.use(express.static('public'));
 
 // Admin credentials
 const ADMIN_USERNAME = (process.env.ADMIN_USERNAME || 'admin').trim();
-const ADMIN_PASSWORD = (process.env.ADMIN_PASSWORD || 'admin123').trim();
+const ADMIN_PASSWORD = (process.env.ADMIN_PASSWORD || 'Password_2025!').trim();
+// Optional hashed password support
+const ADMIN_PASSWORD_HASH = (process.env.ADMIN_PASSWORD_HASH || '').trim();
 
 // Debug env (no secrets)
 console.log('Admin env loaded', {
@@ -826,13 +828,13 @@ app.post('/api/admin/login', (req, res) => {
   const inputUser = username.trim();
   const inputPass = password.trim();
 
-  const passMatch = inputPass === ADMIN_PASSWORD;
+  const inputPassHash = crypto.createHash('sha256').update(inputPass).digest('hex');
+  const envPassHash = ADMIN_PASSWORD_HASH || crypto.createHash('sha256').update(ADMIN_PASSWORD).digest('hex');
+
+  const passMatch = inputPassHash === envPassHash;
   const userMatch = inputUser === ADMIN_USERNAME;
 
   // Safe debug log (password not logged)
-  const inputPassHash = crypto.createHash('sha256').update(inputPass).digest('hex');
-  const envPassHash = crypto.createHash('sha256').update(ADMIN_PASSWORD).digest('hex');
-
   console.log('Admin login attempt', {
     envUser: ADMIN_USERNAME ? 'set' : 'missing',
     envUserLen: ADMIN_USERNAME.length,
@@ -849,12 +851,13 @@ app.post('/api/admin/login', (req, res) => {
 
   // Additional debug to detect trailing/leading whitespace issues
   console.log('Admin login hash compare', {
-    inputHash8: inputPassHash.slice(0, 8),
-    envHash8: envPassHash.slice(0, 8),
+    inputHash: inputPassHash,
+    envHash: envPassHash,
     inputLen: inputPass.length,
     envLen: ADMIN_PASSWORD.length,
     userMatch,
-    passMatch
+    passMatch,
+    hashFromEnvPassword: !ADMIN_PASSWORD_HASH
   });
 
   if (userMatch && passMatch) {
