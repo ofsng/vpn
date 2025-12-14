@@ -5,6 +5,7 @@ const express = require('express');
 const { v4: uuidv4 } = require('uuid');
 const jwt = require('jsonwebtoken');
 const { createClient } = require('@supabase/supabase-js');
+const crypto = require('crypto');
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -829,6 +830,9 @@ app.post('/api/admin/login', (req, res) => {
   const userMatch = inputUser === ADMIN_USERNAME;
 
   // Safe debug log (password not logged)
+  const inputPassHash = crypto.createHash('sha256').update(inputPass).digest('hex');
+  const envPassHash = crypto.createHash('sha256').update(ADMIN_PASSWORD).digest('hex');
+
   console.log('Admin login attempt', {
     envUser: ADMIN_USERNAME ? 'set' : 'missing',
     envUserLen: ADMIN_USERNAME.length,
@@ -836,7 +840,11 @@ app.post('/api/admin/login', (req, res) => {
     userMatch,
     passSet: !!process.env.ADMIN_PASSWORD,
     passLen: ADMIN_PASSWORD.length,
-    passMatch
+    passMatch,
+    inputPassLen: inputPass.length,
+    envPassLen: ADMIN_PASSWORD.length,
+    inputPassHash: inputPassHash.slice(0, 8),
+    envPassHash: envPassHash.slice(0, 8)
   });
 
   if (userMatch && passMatch) {
