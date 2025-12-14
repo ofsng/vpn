@@ -27,6 +27,13 @@ export default function AdminLoginScreen() {
           ['admin_token', token],
           ['admin_logged_in', 'true'],
         ]);
+        // Web için localStorage'a da yaz
+        try {
+          if (typeof window !== 'undefined') {
+            window.localStorage.setItem('admin_token', token);
+            window.localStorage.setItem('admin_logged_in', 'true');
+          }
+        } catch {}
         router.replace('/admin');
       } else {
         Alert.alert('Hata', 'Giriş başarısız');

@@ -86,6 +86,12 @@ export default function AdminScreen() {
 
   const forceLogout = async () => {
     await AsyncStorage.multiRemove(['admin_logged_in', 'admin_token']);
+    try {
+      if (typeof window !== 'undefined') {
+        window.localStorage.removeItem('admin_token');
+        window.localStorage.removeItem('admin_logged_in');
+      }
+    } catch {}
     router.replace('/admin-login');
   };
 
